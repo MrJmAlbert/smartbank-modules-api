@@ -52,7 +52,7 @@ public class CCUserController {
 
 	}
 	
-	@GetMapping("/")
+	@GetMapping("/get-all-users")
 	public ResponseEntity<?> getUsers() throws RecordNotFoundException {
 		
 		ApiSuccessResponse response = new ApiSuccessResponse();
