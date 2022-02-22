@@ -1,5 +1,6 @@
 package com.axess.smartbankapi.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.axess.smartbankapi.dto.CCUserDto;
@@ -29,13 +30,14 @@ public class CCUserController {
 	
 	@Autowired
 	private CCUserService ccUserService;
+
 	
 	@PostMapping("/login")
 	public ResponseEntity<?> verifyLogin(@RequestBody LoginDto loginDto) throws RecordNotFoundException {
 		
 		ApiSuccessResponse response = new ApiSuccessResponse();
 
-		//Login
+		// Login
 		CCUser loggedInUser = this.ccUserService.getLoginDetails(loginDto.getUserId(), loginDto.getPassword());
 
 		response.setMessage("Login Verified successfully. " );
@@ -47,7 +49,6 @@ public class CCUserController {
 
 		return ResponseEntity.status(HttpStatus.OK).header("status", String.valueOf(HttpStatus.OK))
 				.body(response);
-
 
 	}
 	
@@ -68,16 +69,32 @@ public class CCUserController {
 		return ResponseEntity.status(HttpStatus.OK).header("status", String.valueOf(HttpStatus.OK))
 				.body(response);
 
-
 	}
 
-	@PostMapping("/save-user")
-	public String save(@RequestBody CCUser dto) throws RecordNotCreatedException, RecordExistException {
+	@PostMapping("/user-registration")
+	public ResponseEntity<ApiSuccessResponse> save(@RequestBody CCUserDto dto) throws RecordNotCreatedException, RecordExistException {
+		ApiSuccessResponse response = new ApiSuccessResponse();
+
+		if(dto != null){
+			CCUser user = null;
+			BeanUtils.copyProperties(dto,user);
+			String userName = ccUserService.saveUser(user);
+
+			response.setMessage("User registrated -  "+ userName );
+			response.setHttpStatus(String.valueOf(HttpStatus.CREATED));
+			response.setHttpStatusCode(200);
+			response.setBody(user);
+			response.setError(false);
+			response.setSuccess(true);
+
+			return ResponseEntity.status(HttpStatus.OK).header("status", String.valueOf(HttpStatus.OK))
+					.body(response);
+		}
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).header("status", String.valueOf(HttpStatus.BAD_REQUEST))
+				.body(response);
 
 
-		String userName = ccUserService.saveUser(dto);
 
-		return userName;
 
 
 	}
