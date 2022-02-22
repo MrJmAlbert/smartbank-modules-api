@@ -23,7 +23,7 @@ import com.axess.smartbankapi.model.CCUser;
 import com.axess.smartbankapi.service.CCUserService;
 
 @RestController
-@RequestMapping("/ccuser")
+@RequestMapping("/cc-user")
 @CrossOrigin
 public class CCUserController {
 	
@@ -35,6 +35,7 @@ public class CCUserController {
 		
 		ApiSuccessResponse response = new ApiSuccessResponse();
 
+		//Login
 		CCUser loggedInUser = this.ccUserService.getLoginDetails(loginDto.getUserId(), loginDto.getPassword());
 
 		response.setMessage("Login Verified successfully. " );
